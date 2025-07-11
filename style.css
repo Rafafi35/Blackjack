@@ -4,9 +4,15 @@ body{
     justify-content: center;
     align-items: center;
     height: 50vw;
+    flex-direction: column;
+    color: white;
 }
 
 button {
     width: 100px;
     height: 25px;
+}
+
+#actions {
+    flex-direction: row;
 }
