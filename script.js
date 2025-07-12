@@ -7,6 +7,13 @@ const deckSize = document.getElementById("deckSize")
 let playerHandValue = 0
 let dealerHandValue = 0
 let playerState = ""
+let dealerState = ""
+let wager = 0
+const wagerDisplay = document.getElementById("wagerDisplay")
+let balance = 100
+const balanceDisplay = document.getElementById("balanceDisplay")
+balanceDisplay.textContent = "Balance: " + balance
+let roundIsRunnning = false
 
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -57,42 +64,58 @@ async function handleStand() {
     document.getElementById("standButton").removeEventListener("click", handleStand)
     if (playerHandValue < 21) {
         while (dealerHandValue <= 16) {
-        dealerZieht()
-        await sleep(2000)
+            dealerZieht()
+            await sleep(2000)
         }
     }
-    
-    
-    if (playerHandValue > dealerHandValue && playerHandValue < 21 || dealerHandValue > 21) {
-            log.textContent = "Player Wins"
-        } else if (playerHandValue < dealerHandValue && dealerHandValue < 21 || playerHandValue > 21) {
-            log.textContent = "Dealer Wins"
-        } else {
-            log.textContent = "Nobody wins"
-        }
 
-    await sleep(3000)
-    start()
+
+    if (playerHandValue > dealerHandValue && playerHandValue < 21 || dealerHandValue > 21) {
+        log.textContent = "Player Wins"
+        balance += wager * 2
+    } else if (playerHandValue < dealerHandValue && dealerHandValue < 21 || playerHandValue > 21) {
+        log.textContent = "Dealer Wins"
+    } else {
+        log.textContent = "Nobody wins"
+        balance += wager
+    }
+
+    wager = 0
+    roundIsRunnning = false
+    wagerDisplay.textContent = "Your Wager: " + wager
+    balanceDisplay.textContent = "Balance: " + balance
+}
+
+function raiseWager(value) {
+    if (balance >= value && roundIsRunnning === false) {
+        wager += value
+        balance -= value
+        wagerDisplay.textContent = "Your Wager: " + wager
+        balanceDisplay.textContent = "Balance: " + balance
+    }
+
 }
 
 async function start() {
-    log.textContent = "New Round"
-    playerHandValue = 0
-    playerHandText.textContent = "Your Hand: " + playerHandValue
-    playerState = ""
-    dealerHandValue = 0
-    dealerHandText.textContent = "Your Hand: " + playerHandValue
-    dealerState = ""
-    await sleep(2000)
-    karteZiehen()
-    await sleep(2000)
-    dealerZieht()
-    await sleep(2000)
-    karteZiehen()
+    if (roundIsRunnning === false) {
+        roundIsRunnning = true
+        log.textContent = "New Round"
+        playerHandValue = 0
+        playerHandText.textContent = "Your Hand: " + playerHandValue
+        playerState = ""
+        dealerHandValue = 0
+        dealerHandText.textContent = "Your Hand: " + playerHandValue
+        dealerState = ""
+        await sleep(2000)
+        karteZiehen()
+        await sleep(2000)
+        dealerZieht()
+        await sleep(2000)
+        karteZiehen()
 
-    document.getElementById("hitButton").addEventListener("click", karteZiehen)
+        document.getElementById("hitButton").addEventListener("click", karteZiehen)
 
-    document.getElementById("standButton").addEventListener("click", handleStand)
+        document.getElementById("standButton").addEventListener("click", handleStand)
+    }
+
 }
-
-start()
