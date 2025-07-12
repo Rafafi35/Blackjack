@@ -14,20 +14,34 @@ function sleep(ms) {
 function karteZiehen() {
     let randomZahl = Math.floor(Math.random() * currentDeck.length)
     playerHandValue += currentDeck[randomZahl]
+    playerHandText.textContent = "Your Hand: " + playerHandValue
+    if (playerHandValue > 21) {
+        log.textContent = "You drew a " + currentDeck[randomZahl] + " and busted."
+    } else {
+        log.textContent = "You drew a " + currentDeck[randomZahl]
+    }
     currentDeck.splice(randomZahl, 1)
     deckSize.textContent = "Decksize: " + currentDeck.length
-    playerHandText.textContent = "Your Hand: " + playerHandValue
-    log.textContent = "You drew a " + currentDeck[randomZahl]
-    
 }
 
 function dealerZieht() {
     let randomZahl = Math.floor(Math.random() * currentDeck.length)
     dealerHandValue += currentDeck[randomZahl]
+    dealerHandText.textContent = "Dealers Hand " + dealerHandValue
+    if (dealerHandValue > 21) {
+        log.textContent = "Dealer drew a " + currentDeck[randomZahl] + " and busted"
+    } else {
+        log.textContent = "Dealer drew a " + currentDeck[randomZahl]
+    }
     currentDeck.splice(randomZahl, 1)
     deckSize.textContent = "Decksize: " + currentDeck.length
-    dealerHandText.textContent = "Dealers Hand " + dealerHandValue
-    log.textContent = "Dealer drew a " + currentDeck[randomZahl]
+}
+
+async function dealerDrawPattern() {
+    do {
+        dealerZieht()
+        await sleep(2000)
+    } while (dealerHandValue <= 16)
 }
 
 async function start() {
@@ -36,6 +50,14 @@ async function start() {
     dealerZieht()
     await sleep(2000)
     karteZiehen()
+
+    document.getElementById("hitButton").addEventListener("click", () => {
+        karteZiehen();
+    })
+
+    document.getElementById("standButton").addEventListener("click", () => {
+        dealerDrawPattern()
+    })
 }
 
 start()
