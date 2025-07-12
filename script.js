@@ -12,7 +12,7 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-function karteZiehen() {
+async function karteZiehen() {
     let randomZahl = Math.floor(Math.random() * currentDeck.length)
     playerHandValue += currentDeck[randomZahl]
     if (currentDeck[randomZahl] === 11) {
@@ -24,6 +24,8 @@ function karteZiehen() {
     playerHandText.textContent = "Your Hand: " + playerState + " " + playerHandValue
     if (playerHandValue > 21) {
         log.textContent = "You drew a " + currentDeck[randomZahl] + " and busted."
+        await sleep(2000)
+        handleStand()
     } else {
         log.textContent = "You drew a " + currentDeck[randomZahl]
     }
@@ -53,14 +55,17 @@ function dealerZieht() {
 async function handleStand() {
     document.getElementById("hitButton").removeEventListener("click", karteZiehen)
     document.getElementById("standButton").removeEventListener("click", handleStand)
-    do {
+    if (playerHandValue < 21) {
+        while (dealerHandValue <= 16) {
         dealerZieht()
         await sleep(2000)
-    } while (dealerHandValue <= 16)
+        }
+    }
     
-    if (playerHandValue > dealerHandValue || dealerHandValue > 21) {
+    
+    if (playerHandValue > dealerHandValue && playerHandValue < 21 || dealerHandValue > 21) {
             log.textContent = "Player Wins"
-        } else if (playerHandValue < dealerHandValue || playerHandValue > 21) {
+        } else if (playerHandValue < dealerHandValue && dealerHandValue < 21 || playerHandValue > 21) {
             log.textContent = "Dealer Wins"
         } else {
             log.textContent = "Nobody wins"
