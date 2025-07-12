@@ -14,6 +14,7 @@ function sleep(ms) {
 function karteZiehen() {
     let randomZahl = Math.floor(Math.random() * currentDeck.length)
     playerHandValue += currentDeck[randomZahl]
+    currentDeck.splice(randomZahl, 1)
     deckSize.textContent = "Decksize: " + currentDeck.length
     playerHandText.textContent = "Your Hand: " + playerHandValue
     log.textContent = "You drew a " + currentDeck[randomZahl]
@@ -23,6 +24,7 @@ function karteZiehen() {
 function dealerZieht() {
     let randomZahl = Math.floor(Math.random() * currentDeck.length)
     dealerHandValue += currentDeck[randomZahl]
+    currentDeck.splice(randomZahl, 1)
     deckSize.textContent = "Decksize: " + currentDeck.length
     dealerHandText.textContent = "Dealers Hand " + dealerHandValue
     log.textContent = "Dealer drew a " + currentDeck[randomZahl]
