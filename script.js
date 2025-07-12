@@ -14,12 +14,14 @@ let balance = 100
 const balanceDisplay = document.getElementById("balanceDisplay")
 balanceDisplay.textContent = "Balance: " + balance
 let roundIsRunnning = false
+let double = 0
 
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 async function karteZiehen() {
+    document.getElementById("doubleButton").removeEventListener("click", handleDouble)
     let randomZahl = Math.floor(Math.random() * currentDeck.length)
     playerHandValue += currentDeck[randomZahl]
     if (currentDeck[randomZahl] === 11) {
@@ -62,6 +64,7 @@ function dealerZieht() {
 async function handleStand() {
     document.getElementById("hitButton").removeEventListener("click", karteZiehen)
     document.getElementById("standButton").removeEventListener("click", handleStand)
+    document.getElementById("doubleButton").removeEventListener("click", handleDouble)
     if (playerHandValue < 21) {
         while (dealerHandValue <= 16) {
             dealerZieht()
@@ -71,8 +74,13 @@ async function handleStand() {
 
 
     if (playerHandValue > dealerHandValue && playerHandValue < 21 || dealerHandValue > 21) {
-        log.textContent = "Player Wins"
-        balance += wager * 2
+        if (double === 1) {
+            log.textContent = "Player Wins on a double"
+            balance += wager * 3
+        } else {
+            log.textContent = "Player Wins"
+            balance += wager * 2
+        }
     } else if (playerHandValue < dealerHandValue && dealerHandValue < 21 || playerHandValue > 21) {
         log.textContent = "Dealer Wins"
     } else {
@@ -84,6 +92,14 @@ async function handleStand() {
     roundIsRunnning = false
     wagerDisplay.textContent = "Your Wager: " + wager
     balanceDisplay.textContent = "Balance: " + balance
+}
+
+async function handleDouble() {
+    document.getElementById("doubleButton").removeEventListener("click", handleDouble)
+    karteZiehen()
+    double = 1
+    await sleep(2000)
+    handleStand()
 }
 
 function raiseWager(value) {
@@ -103,6 +119,7 @@ async function start() {
         playerHandValue = 0
         playerHandText.textContent = "Your Hand: " + playerHandValue
         playerState = ""
+        double = 0
         dealerHandValue = 0
         dealerHandText.textContent = "Your Hand: " + playerHandValue
         dealerState = ""
@@ -116,6 +133,8 @@ async function start() {
         document.getElementById("hitButton").addEventListener("click", karteZiehen)
 
         document.getElementById("standButton").addEventListener("click", handleStand)
+
+        document.getElementById("doubleButton").addEventListener("click", handleDouble)
     }
 
 }
