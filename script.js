@@ -6,6 +6,7 @@ const log = document.getElementById("log")
 const deckSize = document.getElementById("deckSize")
 let playerHandValue = 0
 let dealerHandValue = 0
+let playerState = ""
 
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -14,7 +15,13 @@ function sleep(ms) {
 function karteZiehen() {
     let randomZahl = Math.floor(Math.random() * currentDeck.length)
     playerHandValue += currentDeck[randomZahl]
-    playerHandText.textContent = "Your Hand: " + playerHandValue
+    if (currentDeck[randomZahl] === 11) {
+        playerState = "soft"
+    } else if (playerHandValue > 21 && playerState === "soft") {
+        playerHandValue -= 10
+        playerState = ""
+    }
+    playerHandText.textContent = "Your Hand: " + playerState + " " + playerHandValue
     if (playerHandValue > 21) {
         log.textContent = "You drew a " + currentDeck[randomZahl] + " and busted."
     } else {
@@ -27,7 +34,13 @@ function karteZiehen() {
 function dealerZieht() {
     let randomZahl = Math.floor(Math.random() * currentDeck.length)
     dealerHandValue += currentDeck[randomZahl]
-    dealerHandText.textContent = "Dealers Hand " + dealerHandValue
+    if (currentDeck[randomZahl] === 11) {
+        dealerState = "soft"
+    } else if (dealerHandValue > 21 && dealerState === "soft") {
+        dealerHandValue -= 10
+        dealerState = ""
+    }
+    dealerHandText.textContent = "Dealers Hand " + dealerState + " " + dealerHandValue
     if (dealerHandValue > 21) {
         log.textContent = "Dealer drew a " + currentDeck[randomZahl] + " and busted"
     } else {
@@ -59,11 +72,13 @@ async function handleStand() {
 
 async function start() {
     log.textContent = "New Round"
-    await sleep(2000)
     playerHandValue = 0
     playerHandText.textContent = "Your Hand: " + playerHandValue
+    playerState = ""
     dealerHandValue = 0
     dealerHandText.textContent = "Your Hand: " + playerHandValue
+    dealerState = ""
+    await sleep(2000)
     karteZiehen()
     await sleep(2000)
     dealerZieht()
