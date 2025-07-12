@@ -37,27 +37,42 @@ function dealerZieht() {
     deckSize.textContent = "Decksize: " + currentDeck.length
 }
 
-async function dealerDrawPattern() {
+async function handleStand() {
+    document.getElementById("hitButton").removeEventListener("click", karteZiehen)
+    document.getElementById("standButton").removeEventListener("click", handleStand)
     do {
         dealerZieht()
         await sleep(2000)
     } while (dealerHandValue <= 16)
+    
+    if (playerHandValue > dealerHandValue || dealerHandValue > 21) {
+            log.textContent = "Player Wins"
+        } else if (playerHandValue < dealerHandValue || playerHandValue > 21) {
+            log.textContent = "Dealer Wins"
+        } else {
+            log.textContent = "Nobody wins"
+        }
+
+    await sleep(3000)
+    start()
 }
 
 async function start() {
+    log.textContent = "New Round"
+    await sleep(2000)
+    playerHandValue = 0
+    playerHandText.textContent = "Your Hand: " + playerHandValue
+    dealerHandValue = 0
+    dealerHandText.textContent = "Your Hand: " + playerHandValue
     karteZiehen()
     await sleep(2000)
     dealerZieht()
     await sleep(2000)
     karteZiehen()
 
-    document.getElementById("hitButton").addEventListener("click", () => {
-        karteZiehen();
-    })
+    document.getElementById("hitButton").addEventListener("click", karteZiehen)
 
-    document.getElementById("standButton").addEventListener("click", () => {
-        dealerDrawPattern()
-    })
+    document.getElementById("standButton").addEventListener("click", handleStand)
 }
 
 start()
