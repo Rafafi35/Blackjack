@@ -64,7 +64,7 @@ async function handleStand() {
     document.getElementById("hitButton").removeEventListener("click", karteZiehen)
     document.getElementById("standButton").removeEventListener("click", handleStand)
     document.getElementById("doubleButton").removeEventListener("click", handleDouble)
-    if (playerHandValue < 21) {
+    if (playerHandValue <= 21) {
         while (dealerHandValue <= 16) {
             dealerZieht()
             await sleep(2000)
@@ -72,10 +72,10 @@ async function handleStand() {
     }
 
 
-    if (playerHandValue > dealerHandValue && playerHandValue < 21 || dealerHandValue > 21) {
+    if (playerHandValue > dealerHandValue && playerHandValue <= 21 || dealerHandValue > 21) {
         log.textContent = "Player Wins"
         balance += wager * 2
-    } else if (playerHandValue < dealerHandValue && dealerHandValue < 21 || playerHandValue > 21) {
+    } else if (playerHandValue < dealerHandValue && dealerHandValue <= 21 || playerHandValue > 21) {
         log.textContent = "Dealer Wins"
     } else {
         log.textContent = "Nobody wins"
