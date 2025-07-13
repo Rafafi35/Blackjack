@@ -25,7 +25,8 @@ async function karteZiehen() {
     playerHandValue += currentDeck[randomZahl]
     if (currentDeck[randomZahl] === 11) {
         playerState = "soft"
-    } else if (playerHandValue > 21 && playerState === "soft") {
+    }
+    if (playerHandValue > 21 && playerState === "soft") {
         playerHandValue -= 10
         playerState = ""
     }
@@ -46,7 +47,8 @@ function dealerZieht() {
     dealerHandValue += currentDeck[randomZahl]
     if (currentDeck[randomZahl] === 11) {
         dealerState = "soft"
-    } else if (dealerHandValue > 21 && dealerState === "soft") {
+    }
+    if (dealerHandValue > 21 && dealerState === "soft") {
         dealerHandValue -= 10
         dealerState = ""
     }

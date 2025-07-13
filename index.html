@@ -9,31 +9,35 @@
 </head>
 
 <body>
-    <p id="deckSize">Decksize: 52</p>
-    <p id="dealerHand">Dealers Hand: </p>
 
-    <div id="actions">
-        <button id="hitButton">Hit</button>
-        <button id="standButton">Stand</button>
-        <button id="doubleButton">Double</button>
+    <div id="table">
+        <p id="deckSize">Decksize: 52</p>
+        <p id="dealerHand">Dealers Hand: </p>
+
+        <div id="actions">
+            <button id="hitButton">Hit</button>
+            <button id="standButton">Stand</button>
+            <button id="doubleButton">Double</button>
+        </div>
+
+        <p id="playerHand">Your Hand:</p>
+
+        <p id="log">Log</p>
+
+        <p id="wagerDisplay">Your Wager: 0</p>
+
+        <button onclick="start()">Start</button>
+
+        <div id="chips">
+            <button onclick="raiseWager(1)">1</button>
+            <button onclick="raiseWager(5)">5</button>
+            <button onclick="raiseWager(10)">10</button>
+            <button onclick="raiseWager(50)">50</button>
+            <button onclick="raiseWager(200)">200</button>
+        </div>
+
+        <p id="balanceDisplay">Balance:</p>
     </div>
-
-    <p id="playerHand">Your Hand:</p>
-
-    <p id="log">Log</p>
-
-    <p id="wagerDisplay">Your Wager: 0</p>
-
-    <div id="actions">
-        <button onclick="raiseWager(1)">1</button>
-        <button onclick="raiseWager(5)">5</button>
-        <button onclick="raiseWager(10)">10</button>
-        <button onclick="raiseWager(50)">50</button>
-    </div>
-
-    <button onclick="start()">Start</button>
-
-    <p id="balanceDisplay">Balance:</p>
 
     <script src="script.js"></script>
 
