@@ -14,6 +14,7 @@ let balance = 100
 const balanceDisplay = document.getElementById("balanceDisplay")
 balanceDisplay.textContent = "Balance: " + balance
 let roundIsRunnning = false
+const chanceDisplay = document.getElementById("chance")
 
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -115,6 +116,35 @@ function raiseWager(value) {
 
 }
 
+let timesWinning = 0        //During the calcualtions: How many times does the player win
+let outcomes = 0    //How many outcomes get calculated
+
+function calculateChance() {
+    console.log("calculating ...")
+    let calculatingDeck = currentDeck
+    let calculatingPlayerHand = playerHandValue
+    let calculatingDealerHand = dealerHandValue
+    for (let i = 0; i < calculatingDeck.length; i++) {
+        calculatingPlayerHand += calculatingDeck[i]
+        console.log("player draws " + calculatingDeck[i])
+        for (let j = 0; j < calculatingDeck.length; j++) {
+            calculatingDealerHand +=calculatingDeck[j]
+            console.log("dealer draws " + calculatingDeck[j])
+            if (calculatingPlayerHand > calculatingDealerHand) {
+                timesWinning += 1
+                console.log("player wins")
+            }
+            outcomes += 1
+            console.log("Outcome " + outcomes)
+            calculatingDealerHand = dealerHandValue
+        }
+        calculatingPlayerHand = playerHandValue
+    }
+
+    console.log("Player wins " + timesWinning + " of " + outcomes + " outcomes " + timesWinning/outcomes + "%")
+
+}
+
 async function start() {
     if (roundIsRunnning === false) {
         roundIsRunnning = true
@@ -138,5 +168,6 @@ async function start() {
 
         document.getElementById("doubleButton").addEventListener("click", handleDouble)
     }
-
 }
+
+calculateChance()
