@@ -14,7 +14,6 @@ let balance = 100
 const balanceDisplay = document.getElementById("balanceDisplay")
 balanceDisplay.textContent = "Balance: " + balance
 let roundIsRunnning = false
-let double = 0
 
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -74,13 +73,8 @@ async function handleStand() {
 
 
     if (playerHandValue > dealerHandValue && playerHandValue < 21 || dealerHandValue > 21) {
-        if (double === 1) {
-            log.textContent = "Player Wins on a double"
-            balance += wager * 3
-        } else {
-            log.textContent = "Player Wins"
-            balance += wager * 2
-        }
+        log.textContent = "Player Wins"
+        balance += wager * 2
     } else if (playerHandValue < dealerHandValue && dealerHandValue < 21 || playerHandValue > 21) {
         log.textContent = "Dealer Wins"
     } else {
@@ -95,11 +89,18 @@ async function handleStand() {
 }
 
 async function handleDouble() {
-    document.getElementById("doubleButton").removeEventListener("click", handleDouble)
-    karteZiehen()
-    double = 1
-    await sleep(2000)
-    handleStand()
+    if (balance < wager) {
+        log.textContent = "Your balance is to low. You cannot double"
+    } else {
+        document.getElementById("doubleButton").removeEventListener("click", handleDouble)
+        document.getElementById("hitButton").removeEventListener("click", karteZiehen)
+        document.getElementById("standButton").removeEventListener("click", handleStand)
+        karteZiehen()
+        balance -= wager
+        wager = wager * 2
+        await sleep(2000)
+        handleStand()
+    }
 }
 
 function raiseWager(value) {
@@ -119,7 +120,6 @@ async function start() {
         playerHandValue = 0
         playerHandText.textContent = "Your Hand: " + playerHandValue
         playerState = ""
-        double = 0
         dealerHandValue = 0
         dealerHandText.textContent = "Your Hand: " + playerHandValue
         dealerState = ""
