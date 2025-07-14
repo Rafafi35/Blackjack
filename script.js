@@ -125,12 +125,36 @@ function calculateChance() {
     let calculatingPlayerHand = playerHandValue
     let calculatingDealerHand = dealerHandValue
     for (let i = 0; i < calculatingDeck.length; i++) {
-        calculatingPlayerHand += calculatingDeck[i]
-        console.log("player draws " + calculatingDeck[i])
+        if (calculatingPlayerHand < 12) {
+            calculatingPlayerHand += calculatingDeck[i]
+            console.log("player draws " + calculatingDeck[i] + " and now has " + calculatingPlayerHand)
+            calculatingDeck.splice(i, 1)
+            if (calculatingPlayerHand < 12) {
+                for (let k = 0; k < calculatingDeck.length; k++) {
+                    calculatingPlayerHand += calculatingDeck[k]
+                    console.log("player draws " + calculatingDeck[k] + " and now has " + calculatingPlayerHand)
+                    calculateDealersHand()
+                }
+            } else {
+                calculateDealersHand()
+            }
+        } else {
+            calculateDealersHand()
+            console.log("=======================")
+        }
+
+
+        
+
+    }
+
+    console.log("Player wins " + timesWinning + " of " + outcomes + " outcomes " + timesWinning / outcomes * 100 + "%")
+
+    function calculateDealersHand() {
         for (let j = 0; j < calculatingDeck.length; j++) {
-            calculatingDealerHand +=calculatingDeck[j]
-            console.log("dealer draws " + calculatingDeck[j])
-            if (calculatingPlayerHand > calculatingDealerHand) {
+            calculatingDealerHand += calculatingDeck[j]
+            console.log("dealer draws " + calculatingDeck[j] + " and now has " + calculatingDealerHand + " vs player: " + calculatingPlayerHand)
+            if (calculatingPlayerHand > calculatingDealerHand && calculatingPlayerHand <= 21 || calculatingDealerHand > 21) {
                 timesWinning += 1
                 console.log("player wins")
             }
@@ -140,8 +164,6 @@ function calculateChance() {
         }
         calculatingPlayerHand = playerHandValue
     }
-
-    console.log("Player wins " + timesWinning + " of " + outcomes + " outcomes " + timesWinning/outcomes + "%")
 
 }
 
@@ -162,6 +184,8 @@ async function start() {
         await sleep(2000)
         karteZiehen()
 
+        calculateChance()
+
         document.getElementById("hitButton").addEventListener("click", karteZiehen)
 
         document.getElementById("standButton").addEventListener("click", handleStand)
@@ -169,5 +193,3 @@ async function start() {
         document.getElementById("doubleButton").addEventListener("click", handleDouble)
     }
 }
-
-calculateChance()
