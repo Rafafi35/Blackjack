@@ -137,6 +137,23 @@ function calculateChance() {
     }
 
     console.log("Winning Chances for when Player stands are: " + timesWinning / outcomes * 100 + "%, outcomes " + outcomes)
+    timesWinning = 0
+    outcomes = 0
+
+    // Chances when player hits
+    for (let j = 0; j < currentDeck.length; j++) {
+        const card = currentDeck[j]
+        const newDeck = currentDeck.slice()
+        newDeck.splice(j, 1)
+        const playerHand = calculatingPlayerHand + card
+        console.log("Player draws " + card)
+
+        drawNextCard(calculatingDealerHand, newDeck, playerHand)
+    }
+
+    console.log("Winning Chances for when Player hits are: " + timesWinning / outcomes * 100 + "%, outcomes " + outcomes)
+    timesWinning = 0
+    outcomes = 0
 }
 
 function drawNextCard(dealerHand, deck, calculatingPlayerHand) {
@@ -179,7 +196,7 @@ async function start() {
         dealerZieht()
         await sleep(2000)
         karteZiehen()
-
+        await sleep(2000)
         calculateChance()
 
         document.getElementById("hitButton").addEventListener("click", karteZiehen)
