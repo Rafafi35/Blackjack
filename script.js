@@ -118,60 +118,49 @@ function raiseWager(value) {
 
 let timesWinning = 0        //During the calcualtions: How many times does the player win
 let outcomes = 0            //How many outcomes get calculated
-let calculatingDeck = []
-calculatingDeck.push(...currentDeck)
-let calculatingPlayerHand = playerHandValue
-let calculatingDealerHand = dealerHandValue
 
 function calculateChance() {
     console.log("calculating ...")
-    calculatingDeck.length = 0
-    calculatingDeck.push(...currentDeck)
-    calculatingPlayerHand = playerHandValue
-    calculatingDealerHand = dealerHandValue
+    let calculatingPlayerHand = playerHandValue
+    let calculatingDealerHand = dealerHandValue
+    outcomes = 0
+    timesWinning = 0
     // Chances when player stands
-    for (let i = 0; i < calculatingDeck.length; i++) {
-        calculatingDealerHand += calculatingDeck[i]
-        console.log("Dealer draws first card: " + calculatingDeck[i])
-        calculatingDeck.splice(i, 1)
-        if (calculatingDealerHand < 17) {
-            console.log("Dealers Hand under 17")
-            for (let j = 0; j < calculatingDeck.length; j++) {
-                calculatingDealerHand += calculatingDeck[j]
-                console.log("Dealer draws second card: " + calculatingDeck[j])
+    for (let i = 0; i < currentDeck.length; i++) {
+        const firstCard = currentDeck[i]
+        const newDeck = currentDeck.slice()
+        newDeck.splice(i, 1)
+        startingDealerHand = calculatingDealerHand + firstCard
+        console.log("Dealer draws first card: " + firstCard)
 
-                if (calculatingPlayerHand > calculatingDealerHand && calculatingPlayerHand <= 21 || calculatingDealerHand > 21) {
-                    timesWinning += 1
-                    console.log("player wins")
-                }
-                console.log("P: " + calculatingPlayerHand + " vs D: " + calculatingDealerHand)
-                console.log("==========================")
-                outcomes += 1
-
-                calculatingDealerHand -= calculatingDeck[j]
-            }
-        } else {
-
-            if (calculatingPlayerHand > calculatingDealerHand && calculatingPlayerHand <= 21 || calculatingDealerHand > 21) {
-                timesWinning += 1
-                console.log("player wins")
-            }
-            console.log("P: " + calculatingPlayerHand + " vs D: " + calculatingDealerHand)
-            console.log("==========================")
-            outcomes += 1
-
-            calculatingDealerHand = dealerHandValue
-
-        }
-
-        calculatingDeck.length = 0
-        calculatingDeck.push(...currentDeck)
-        console.log(calculatingDeck)
-
+        drawNextCard(startingDealerHand, newDeck, calculatingPlayerHand)
     }
-    console.log("Winning Chances for when Player stands are: " + timesWinning / outcomes * 100 + "%")
+
+    console.log("Winning Chances for when Player stands are: " + timesWinning / outcomes * 100 + "%, outcomes " + outcomes)
 }
 
+function drawNextCard(dealerHand, deck, calculatingPlayerHand) {
+    if (dealerHand < 17) {
+        console.log("Dealers Hand under 17")
+        for (let i = 0; i < deck.length; i++) {
+            const card = deck[i]
+            const newHand = dealerHand + card
+            console.log("Dealer draws " + card)
+            const newDeck = deck.slice()
+            newDeck.splice(i, 1)
+
+            drawNextCard(newHand, newDeck, calculatingPlayerHand)
+        }
+    } else {
+        if (calculatingPlayerHand > dealerHand && calculatingPlayerHand <= 21 || dealerHand > 21) {
+            timesWinning += 1
+            console.log("player wins")
+        }
+        console.log("P: " + calculatingPlayerHand + " vs D: " + dealerHand)
+        console.log("==========================")
+        outcomes += 1
+    }
+}
 
 
 async function start() {
