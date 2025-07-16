@@ -118,22 +118,27 @@ function raiseWager(value) {
 
 let timesWinning = 0        //During the calcualtions: How many times does the player win
 let outcomes = 0            //How many outcomes get calculated
+let calculatingDeck = []
+calculatingDeck.push(...currentDeck)
+let calculatingPlayerHand = playerHandValue
+let calculatingDealerHand = dealerHandValue
 
 function calculateChance() {
     console.log("calculating ...")
-    let calculatingDeck = currentDeck
-    let calculatingPlayerHand = playerHandValue
-    let calculatingDealerHand = dealerHandValue
+    calculatingDeck.length = 0
+    calculatingDeck.push(...currentDeck)
+    calculatingPlayerHand = playerHandValue
+    calculatingDealerHand = dealerHandValue
     // Chances when player stands
     for (let i = 0; i < calculatingDeck.length; i++) {
         calculatingDealerHand += calculatingDeck[i]
-        console.log("Dealer draws: " + calculatingDeck[i])
+        console.log("Dealer draws first card: " + calculatingDeck[i])
         calculatingDeck.splice(i, 1)
         if (calculatingDealerHand < 17) {
             console.log("Dealers Hand under 17")
             for (let j = 0; j < calculatingDeck.length; j++) {
                 calculatingDealerHand += calculatingDeck[j]
-                console.log("Dealer draws: " + calculatingDeck[j])
+                console.log("Dealer draws second card: " + calculatingDeck[j])
 
                 if (calculatingPlayerHand > calculatingDealerHand && calculatingPlayerHand <= 21 || calculatingDealerHand > 21) {
                     timesWinning += 1
@@ -159,7 +164,9 @@ function calculateChance() {
 
         }
 
-        calculatingDeck = currentDeck
+        calculatingDeck.length = 0
+        calculatingDeck.push(...currentDeck)
+        console.log(calculatingDeck)
 
     }
     console.log("Winning Chances for when Player stands are: " + timesWinning / outcomes * 100 + "%")
