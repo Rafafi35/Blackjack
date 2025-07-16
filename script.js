@@ -117,55 +117,55 @@ function raiseWager(value) {
 }
 
 let timesWinning = 0        //During the calcualtions: How many times does the player win
-let outcomes = 0    //How many outcomes get calculated
+let outcomes = 0            //How many outcomes get calculated
 
 function calculateChance() {
     console.log("calculating ...")
     let calculatingDeck = currentDeck
     let calculatingPlayerHand = playerHandValue
     let calculatingDealerHand = dealerHandValue
+    // Chances when player stands
     for (let i = 0; i < calculatingDeck.length; i++) {
-        if (calculatingPlayerHand < 12) {
-            calculatingPlayerHand += calculatingDeck[i]
-            console.log("player draws " + calculatingDeck[i] + " and now has " + calculatingPlayerHand)
-            calculatingDeck.splice(i, 1)
-            if (calculatingPlayerHand < 12) {
-                for (let k = 0; k < calculatingDeck.length; k++) {
-                    calculatingPlayerHand += calculatingDeck[k]
-                    console.log("player draws " + calculatingDeck[k] + " and now has " + calculatingPlayerHand)
-                    calculateDealersHand()
+        calculatingDealerHand += calculatingDeck[i]
+        console.log("Dealer draws: " + calculatingDeck[i])
+        calculatingDeck.splice(i, 1)
+        if (calculatingDealerHand < 17) {
+            console.log("Dealers Hand under 17")
+            for (let j = 0; j < calculatingDeck.length; j++) {
+                calculatingDealerHand += calculatingDeck[j]
+                console.log("Dealer draws: " + calculatingDeck[j])
+
+                if (calculatingPlayerHand > calculatingDealerHand && calculatingPlayerHand <= 21 || calculatingDealerHand > 21) {
+                    timesWinning += 1
+                    console.log("player wins")
                 }
-            } else {
-                calculateDealersHand()
+                console.log("P: " + calculatingPlayerHand + " vs D: " + calculatingDealerHand)
+                console.log("==========================")
+                outcomes += 1
+
+                calculatingDealerHand -= calculatingDeck[j]
             }
         } else {
-            calculateDealersHand()
-            console.log("=======================")
-        }
 
-
-        
-
-    }
-
-    console.log("Player wins " + timesWinning + " of " + outcomes + " outcomes " + timesWinning / outcomes * 100 + "%")
-
-    function calculateDealersHand() {
-        for (let j = 0; j < calculatingDeck.length; j++) {
-            calculatingDealerHand += calculatingDeck[j]
-            console.log("dealer draws " + calculatingDeck[j] + " and now has " + calculatingDealerHand + " vs player: " + calculatingPlayerHand)
             if (calculatingPlayerHand > calculatingDealerHand && calculatingPlayerHand <= 21 || calculatingDealerHand > 21) {
                 timesWinning += 1
                 console.log("player wins")
             }
+            console.log("P: " + calculatingPlayerHand + " vs D: " + calculatingDealerHand)
+            console.log("==========================")
             outcomes += 1
-            console.log("Outcome " + outcomes)
-            calculatingDealerHand = dealerHandValue
-        }
-        calculatingPlayerHand = playerHandValue
-    }
 
+            calculatingDealerHand = dealerHandValue
+
+        }
+
+        calculatingDeck = currentDeck
+
+    }
+    console.log("Winning Chances for when Player stands are: " + timesWinning / outcomes * 100 + "%")
 }
+
+
 
 async function start() {
     if (roundIsRunnning === false) {
