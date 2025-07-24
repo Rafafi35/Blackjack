@@ -118,6 +118,10 @@ function raiseWager(value) {
 
 let timesWinning = 0        //During the calcualtions: How many times does the player win
 let outcomes = 0            //How many outcomes get calculated
+let standingChance = 0
+let hittingChance = 0
+const standingChanceDisplay = document.getElementById("standingChance")
+const hittingChanceDisplay = document.getElementById("hittingChance")
 
 function calculateChance() {
     console.log("calculating ...")
@@ -126,50 +130,62 @@ function calculateChance() {
     outcomes = 0
     timesWinning = 0
     // Chances when player stands
-    for (let i = 0; i < currentDeck.length; i++) {
-        const firstCard = currentDeck[i]
+    for (let i = 0; i < 30; i++) {
+        const random = Math.floor(Math.random() * currentDeck.length)
+        const firstCard = currentDeck[random]
         const newDeck = currentDeck.slice()
-        newDeck.splice(i, 1)
+        newDeck.splice(random, 1)
         startingDealerHand = calculatingDealerHand + firstCard
         console.log("Dealer draws first card: " + firstCard)
 
         drawNextCard(startingDealerHand, newDeck, calculatingPlayerHand)
     }
 
-    console.log("Winning Chances for when Player stands are: " + timesWinning / outcomes * 100 + "%, outcomes " + outcomes)
+    standingChance = Math.floor(timesWinning / outcomes * 100)
     timesWinning = 0
     outcomes = 0
 
     // Chances when player hits
-    for (let j = 0; j < currentDeck.length; j++) {
-        const card = currentDeck[j]
-        const newDeck = currentDeck.slice()
-        newDeck.splice(j, 1)
-        const playerHand = calculatingPlayerHand + card
-        console.log("Player draws " + card)
+    if (calculatingPlayerHand === 20) {
+        hittingChance = 0
+    } else {
+        for (let j = 0; j < 30; j++) {
+            const random = Math.floor(Math.random() * currentDeck.length)
+            const card = currentDeck[random]
+            const newDeck = currentDeck.slice()
+            newDeck.splice(random, 1)
+            const playerHand = calculatingPlayerHand + card
+            console.log("Player draws " + card)
 
-        drawNextCard(calculatingDealerHand, newDeck, playerHand)
+            drawNextCard(calculatingDealerHand, newDeck, playerHand)
+        }
+
+        hittingChance = Math.floor(timesWinning / outcomes * 100)
+        console.log("Winning Chances for when Player stands are: " + standingChance + "%")
+        console.log("Winning Chances for when Player hits are: " + hittingChance + "%")
+        timesWinning = 0
+        outcomes = 0
+        standingChanceDisplay.textContent = "Winning Chance when player stands: " + standingChance + "%"
+        hittingChanceDisplay.textContent = "Winning Chance when player hits: " + hittingChance + "%"
     }
 
-    console.log("Winning Chances for when Player hits are: " + timesWinning / outcomes * 100 + "%, outcomes " + outcomes)
-    timesWinning = 0
-    outcomes = 0
 }
 
 function drawNextCard(dealerHand, deck, calculatingPlayerHand) {
     if (dealerHand < 17) {
         console.log("Dealers Hand under 17")
-        for (let i = 0; i < deck.length; i++) {
-            const card = deck[i]
+        for (let i = 0; i < 30; i++) {
+            const random = Math.floor(Math.random() * deck.length)
+            const card = deck[random]
             const newHand = dealerHand + card
             console.log("Dealer draws " + card)
             const newDeck = deck.slice()
-            newDeck.splice(i, 1)
+            newDeck.splice(random, 1)
 
             drawNextCard(newHand, newDeck, calculatingPlayerHand)
         }
     } else {
-        if (calculatingPlayerHand > dealerHand && calculatingPlayerHand <= 21 || dealerHand > 21) {
+        if (calculatingPlayerHand > dealerHand && calculatingPlayerHand <= 21 || dealerHand > 21 && calculatingPlayerHand <= 21) {
             timesWinning += 1
             console.log("player wins")
         }
