@@ -130,7 +130,7 @@ function calculateChance() {
     outcomes = 0
     timesWinning = 0
     // Chances when player stands
-    for (let i = 0; i < 30; i++) {
+    for (let i = 0; i < 75; i++) {
         const random = Math.floor(Math.random() * currentDeck.length)
         const firstCard = currentDeck[random]
         const newDeck = currentDeck.slice()
@@ -149,7 +149,7 @@ function calculateChance() {
     if (calculatingPlayerHand === 20) {
         hittingChance = 0
     } else {
-        for (let j = 0; j < 30; j++) {
+        for (let j = 0; j < 75; j++) {
             const random = Math.floor(Math.random() * currentDeck.length)
             const card = currentDeck[random]
             const newDeck = currentDeck.slice()
@@ -174,7 +174,7 @@ function calculateChance() {
 function drawNextCard(dealerHand, deck, calculatingPlayerHand) {
     if (dealerHand < 17) {
         console.log("Dealers Hand under 17")
-        for (let i = 0; i < 30; i++) {
+        for (let i = 0; i < 20; i++) {
             const random = Math.floor(Math.random() * deck.length)
             const card = deck[random]
             const newHand = dealerHand + card
