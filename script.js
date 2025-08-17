@@ -43,6 +43,16 @@ async function karteZiehen() {
     deckSize.textContent = "Decksize: " + currentDeck.length
 }
 
+async function handleHit() {
+    console.log("handled hiit")
+    karteZiehen()
+    sleep(2000)
+    if (playerHandValue < 21) {
+        calculateChance()
+    }
+
+}
+
 function dealerZieht() {
     let randomZahl = Math.floor(Math.random() * currentDeck.length)
     dealerHandValue += currentDeck[randomZahl]
@@ -64,7 +74,7 @@ function dealerZieht() {
 }
 
 async function handleStand() {
-    document.getElementById("hitButton").removeEventListener("click", karteZiehen)
+    document.getElementById("hitButton").removeEventListener("click", handleHit)
     document.getElementById("standButton").removeEventListener("click", handleStand)
     document.getElementById("doubleButton").removeEventListener("click", handleDouble)
     if (playerHandValue <= 21) {
@@ -96,7 +106,7 @@ async function handleDouble() {
         log.textContent = "Your balance is to low. You cannot double"
     } else {
         document.getElementById("doubleButton").removeEventListener("click", handleDouble)
-        document.getElementById("hitButton").removeEventListener("click", karteZiehen)
+        document.getElementById("hitButton").removeEventListener("click", handleHit)
         document.getElementById("standButton").removeEventListener("click", handleStand)
         karteZiehen()
         balance -= wager
@@ -125,6 +135,8 @@ const hittingChanceDisplay = document.getElementById("hittingChance")
 
 function calculateChance() {
     console.log("calculating ...")
+    standingChanceDisplay.textContent = "calculating chances ..."
+    hittingChanceDisplay.textContent = ""
     let calculatingPlayerHand = playerHandValue
     let calculatingDealerHand = dealerHandValue
     outcomes = 0
@@ -213,12 +225,18 @@ async function start() {
         await sleep(2000)
         karteZiehen()
         await sleep(2000)
-        calculateChance()
+        if (playerHandValue == 21) {
+            log.textContent = "Blackjack! Player Wins"
+            balance += wager * 1.5
+        } else {
 
-        document.getElementById("hitButton").addEventListener("click", karteZiehen)
+            calculateChance()
 
-        document.getElementById("standButton").addEventListener("click", handleStand)
+            document.getElementById("hitButton").addEventListener("click", handleHit)
 
-        document.getElementById("doubleButton").addEventListener("click", handleDouble)
+            document.getElementById("standButton").addEventListener("click", handleStand)
+
+            document.getElementById("doubleButton").addEventListener("click", handleDouble)
+        }
     }
 }
