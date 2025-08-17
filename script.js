@@ -46,7 +46,7 @@ async function karteZiehen() {
 async function handleHit() {
     console.log("handled hiit")
     karteZiehen()
-    sleep(2000)
+    await sleep(2000)
     if (playerHandValue < 21) {
         calculateChance()
     }
@@ -134,7 +134,6 @@ const standingChanceDisplay = document.getElementById("standingChance")
 const hittingChanceDisplay = document.getElementById("hittingChance")
 
 function calculateChance() {
-    console.log("calculating ...")
     standingChanceDisplay.textContent = "calculating chances ..."
     hittingChanceDisplay.textContent = ""
     let calculatingPlayerHand = playerHandValue
@@ -171,15 +170,15 @@ function calculateChance() {
 
             drawNextCard(calculatingDealerHand, newDeck, playerHand)
         }
-
-        hittingChance = Math.floor(timesWinning / outcomes * 100)
-        console.log("Winning Chances for when Player stands are: " + standingChance + "%")
-        console.log("Winning Chances for when Player hits are: " + hittingChance + "%")
-        timesWinning = 0
-        outcomes = 0
-        standingChanceDisplay.textContent = "Winning Chance when player stands: " + standingChance + "%"
-        hittingChanceDisplay.textContent = "Winning Chance when player hits: " + hittingChance + "%"
     }
+
+    hittingChance = Math.floor(timesWinning / outcomes * 100)
+    console.log("Winning Chances for when Player stands are: " + standingChance + "%")
+    console.log("Winning Chances for when Player hits are: " + hittingChance + "%")
+    timesWinning = 0
+    outcomes = 0
+    standingChanceDisplay.textContent = "Winning Chance when player stands: " + standingChance + "%"
+    hittingChanceDisplay.textContent = "Winning Chance when player hits: " + hittingChance + "%"
 
 }
 
