@@ -49,6 +49,12 @@ async function handleHit() {
     await sleep(2000)
     if (playerHandValue < 21) {
         calculateChance()
+    } else if (playerHandValue === 21) {
+        standingChanceDisplay.textContent = "Winning Chance when player stands: 100%"
+        hittingChanceDisplay.textContent = "Winning Chance when player hits: 0%"
+    } else {
+        standingChanceDisplay.textContent = ""
+        hittingChanceDisplay.textContent = ""
     }
 
 }
